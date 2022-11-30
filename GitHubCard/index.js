@@ -1,11 +1,23 @@
+import axios from "axios";
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
-*/
-
-/*
-  STEP 2: Inspect and study the data coming back, this is YOUR
+    */
+   const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell', 'owenmccomas'];
+   
+   for (let i = 0; i < followersArray.length; i++) {
+     getGitCard(followersArray[i]);
+    }
+    
+    function getGitCard(username){
+      axios.get(`https://api.github.com/users/${username}`)
+      .then(resp => {
+        document.querySelector('.cards').appendChild(githubCardMaker(resp.data));
+      }) .catch(err => console.error(err))
+    }
+    /*
+    STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
     data in order to use it to build your component function
 
@@ -28,7 +40,47 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+
+
+function githubCardMaker(gitInfo){
+  const card = document.createElement('div');
+  const img = document.createElement('img');
+  const info = document.createElement('div');
+  const name = document.createElement('h3');
+  const username = document.createElement('p');
+  const location = document.createElement('p');
+  const profile = document.createElement('p');
+  const followerCount = document.createElement('p');
+  const followingCount = document.createElement('p') ;
+  const bio = document.createElement('p');
+
+  name.textContent = gitInfo.name;
+  username.textContent = gitInfo.login;
+  location.textContent = gitInfo.location;
+  profile.textContent = gitInfo.html_url;
+  profile.href = gitInfo.html_url;
+  followerCount.textContent = `Follower: ${gitInfo.followers}`;
+  followingCount.textContent = `Following: ${gitInfo.following}`;
+  bio.textContent = gitInfo.bio;
+  card.classList.add('card');
+  img.src = gitInfo.avatar_url;
+  info.classList.add('card-info');
+  name.classList.add('name');
+  username.classList.add('username');
+
+  card.appendChild(img);
+  card.appendChild(info);
+  info.appendChild(name);
+  info.appendChild(username);
+  info.appendChild(location);
+  info.appendChild(profile);
+  info.appendChild(followerCount);
+  info.appendChild(followingCount);
+  info.appendChild(bio);
+
+  return card;
+}
+githubCardMaker()
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
